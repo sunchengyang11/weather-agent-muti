@@ -15,6 +15,34 @@ const memory = new Memory({
 });
 
 /**
+ * ===== 新增 Agent：只做拆分，不影响现有逻辑 =====
+ */
+export const activityPlannerAgent = new Agent({
+  id: 'activity-planner-agent',
+  name: 'Activity Planner Agent',
+  instructions: `
+You help users plan activities based on weather conditions.
+
+- Assume weather data is already known or provided
+- Focus on suggestions, not raw weather data
+- Keep answers short and practical
+`,
+  model: process.env.MODEL || 'openai/gpt-4o',
+  tools: { weatherTool },
+  memory,
+  scorers: {
+    toolCallAppropriateness: {
+      scorer: scorers.toolCallAppropriatenessScorer,
+      sampling: { type: 'ratio', rate: 1 },
+    },
+    completeness: {
+      scorer: scorers.completenessScorer,
+      sampling: { type: 'ratio', rate: 1 },
+    },
+  },
+});
+
+/**
  * ===== 原有 Agent：不动，保证项目不受影响 =====
  */
 export const weatherAgent = new Agent({
@@ -46,30 +74,4 @@ You are a helpful weather assistant that provides accurate weather information.
   },
 });
 
-/**
- * ===== 新增 Agent：只做拆分，不影响现有逻辑 =====
- */
-export const activityPlannerAgent = new Agent({
-  id: 'activity-planner-agent',
-  name: 'Activity Planner Agent',
-  instructions: `
-You help users plan activities based on weather conditions.
 
-- Assume weather data is already known or provided
-- Focus on suggestions, not raw weather data
-- Keep answers short and practical
-`,
-  model: process.env.MODEL || 'openai/gpt-4o',
-  tools: { weatherTool },
-  memory,
-  scorers: {
-    toolCallAppropriateness: {
-      scorer: scorers.toolCallAppropriatenessScorer,
-      sampling: { type: 'ratio', rate: 1 },
-    },
-    completeness: {
-      scorer: scorers.completenessScorer,
-      sampling: { type: 'ratio', rate: 1 },
-    },
-  },
-});
