@@ -34,7 +34,7 @@ function getWeatherCondition(code: number): string {
 }
 
 const fetchWeather = createStep({
-  id: 'fetch-weather',
+  id: 'fetch-weather-multi',
   description: 'Fetches weather forecast for a given city',
   inputSchema: z.object({
     city: z.string().describe('The city to get the weather for'),
