@@ -45,7 +45,7 @@ You help users plan activities based on weather conditions.
 /**
  * ===== 原有 Agent：不动，保证项目不受影响 =====
  */
-export const weatherAgent = new Agent({
+export const weatherAgentOld = new Agent({
   id: 'weather-agent',
   name: 'Weather Agent',
   instructions: `
